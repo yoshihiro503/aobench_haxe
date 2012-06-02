@@ -13,44 +13,44 @@ class Vec3 {
     public var y : Float;
     public var z : Float;
 
-    public function new(x:Float, y:Float, z:Float)
+    public function new(x, y, z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
     }
     
-    public static inline function vadd(a:Vec3, b:Vec3) : Vec3
+    public static inline function vadd(a, b)
     {
         return new Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
     }
 
-    public static inline function vsub(a:Vec3, b:Vec3):Vec3
+    public static inline function vsub(a : Vec3, b : Vec3 )
     {
         return new Vec3(a.x - b.x, a.y - b.y, a.z - b.z);
     }
 
-    public static inline function vcross(a:Vec3, b:Vec3):Vec3
+    public static inline function vcross(a:Vec3, b:Vec3)
     {
         return new Vec3(a.y * b.z - a.z * b.y,
                         a.z * b.x - a.x * b.z,
                         a.x * b.y - a.y * b.x);
     }
 
-    public static inline function vdot(a:Vec3, b:Vec3):Float
+    public static inline function vdot(a:Vec3, b:Vec3)
     {
         return (a.x * b.x + a.y * b.y + a.z * b.z);
     }
 
-    static inline function vlength(a:Vec3):Float
+    static inline function vlength(a:Vec3)
     {
         return Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
     }
 
-    public static function vnormalize(a:Vec3):Vec3
+    public static function vnormalize(a:Vec3)
     {
-        var len : Float = Vec3.vlength(a);
-        var v : Vec3 = new Vec3(a.x, a.y, a.z);
+        var len = Vec3.vlength(a);
+        var v = new Vec3(a.x, a.y, a.z);
 
         if (Math.abs(len) > 1.0e-17) {
             v.x /= len;
@@ -65,7 +65,7 @@ class Vec3 {
 
 
 class Isect {
-    public var t   :Float;//  = 1000000.0;     // far away
+    public var t : Float;//  = 1000000.0;     // far away
     public var hit :Bool;// = false;
     public var p:Vec3;
     public var n:Vec3;
@@ -81,7 +81,7 @@ class Isect {
 class Ray {
     public var org : Vec3;
     public var dir : Vec3;
-    public function new(org:Vec3, dir:Vec3) {
+    public function new(org, dir) {
         this.org = org;
         this.dir = dir;
     }
@@ -91,7 +91,7 @@ class Sphere {
     public var center : Vec3;
     public var radius : Float;
 
-    public function new(center:Vec3, radius:Float) {
+    public function new(center, radius) {
         this.center = center;
         this.radius = radius;
     }
@@ -103,7 +103,7 @@ class Sphere {
         var D  : Float = B * B - C;
 
         if (D > 0.0) {
-            var t : Float= -B - Math.sqrt(D);
+            var t = -B - Math.sqrt(D);
 
             if ( (t > 0.0) && (t < isect.t) ) {
                 isect.t   = t;
@@ -114,7 +114,7 @@ class Sphere {
                                    ray.org.z + ray.dir.z * t);
 
                 // calculate normal.
-                var n : Vec3= Vec3.vsub(isect.p, this.center);
+                var n = Vec3.vsub(isect.p, this.center);
                 isect.n = Vec3.vnormalize(n);
             }
         }
@@ -125,15 +125,15 @@ class Plane {
     public var p : Vec3;
     public var n : Vec3;
     
-    public function new(p:Vec3, n:Vec3) {
+    public function new(p, n) {
         this.p = p;
         this.n = n;
     }
     public function intersect (ray:Ray, isect:Isect) {
-        var d : Float = -Vec3.vdot(this.p, this.n);
-        var v : Float =  Vec3.vdot(ray.dir, this.n);
+        var d  = -Vec3.vdot(this.p, this.n);
+        var v =  Vec3.vdot(ray.dir, this.n);
         if (Math.abs(v) < 1.0e-17) return;      // no hit
-        var t : Float = -(Vec3.vdot(ray.org, this.n) + d) / v;
+        var t = -(Vec3.vdot(ray.org, this.n) + d) / v;
         if ( (t > 0.0) && (t < isect.t) ) {
             isect.hit = true;
             isect.t   = t;
@@ -165,7 +165,7 @@ class AOBench {
     static inline var NTHETA = AOBench.NAO_SAMPLES;
     static inline var ALLRAY = AOBench.NAO_SAMPLES * AOBench.NAO_SAMPLES;
 	
-    function clamp(f:Float) : Float
+    function clamp(f) : Float
     {
         var i : Float = f * 255.0;
         if (i > 255.0) i = 255.0;
@@ -197,12 +197,8 @@ class AOBench {
 
     // Scene
 
-    public var spheres : Array<Sphere>; /* = [
-                                           new Sphere(new Vec3(-2.0, 0.0, -3.5), 0.5),
-                                           new Sphere(new Vec3(-0.5, 0.0, -3.0), 0.5),
-                                           new Sphere(new Vec3(1.0, 0.0, -2.2), 0.5)
-                                           ];*/
-    public var plane : Plane; // = new Plane(new Vec3(0.0, -0.5, 0.0), new Vec3(0.0, 1.0, 0.0));
+    public var spheres : Array<Sphere>;
+    public var plane : Plane;
     /*
       function init_scene() : void
       {
@@ -227,32 +223,30 @@ class AOBench {
         var basis : Array<Vec3> = createArray(3);
         this.orthoBasis(basis,  isect.n);
         
-        var p : Vec3 = new Vec3(
-                                isect.p.x + AOBench.EPS * isect.n.x,
-                                isect.p.y + AOBench.EPS * isect.n.y,
-                                isect.p.z + AOBench.EPS * isect.n.z);
+        var p = new Vec3(
+                         isect.p.x + AOBench.EPS * isect.n.x,
+                         isect.p.y + AOBench.EPS * isect.n.y,
+                         isect.p.z + AOBench.EPS * isect.n.z);
 
-        var occlusion : Int = 0;
+        var occlusion = 0;
 
-        var i:Int = 0;
-        var j:Int = 0;
         for (j in 0...AOBench.NPHI) {
             for (i in 0...AOBench.NTHETA) {
-                var r   : Float = Math.random();
-                var phi : Float = 2.0 * Math.PI * Math.random();
-                var x   : Float = Math.cos(phi) * Math.sqrt(1.0 - r);
-                var y   : Float = Math.sin(phi) * Math.sqrt(1.0 - r);
-                var z   : Float = Math.sqrt(r);
+                var r   = Math.random();
+                var phi = 2.0 * Math.PI * Math.random();
+                var x   = Math.cos(phi) * Math.sqrt(1.0 - r);
+                var y   = Math.sin(phi) * Math.sqrt(1.0 - r);
+                var z   = Math.sqrt(r);
 
                 // local -> global
-                var rx  : Float = x * basis[0].x + y * basis[1].x + z * basis[2].x;
-                var ry  : Float = x * basis[0].y + y * basis[1].y + z * basis[2].y;
-                var rz  : Float = x * basis[0].z + y * basis[1].z + z * basis[2].z;
+                var rx = x * basis[0].x + y * basis[1].x + z * basis[2].x;
+                var ry = x * basis[0].y + y * basis[1].y + z * basis[2].y;
+                var rz = x * basis[0].z + y * basis[1].z + z * basis[2].z;
 
-                var raydir :Vec3 = new Vec3(rx, ry, rz);
-                var ray    : Ray = new Ray(p, raydir);
+                var raydir = new Vec3(rx, ry, rz);
+                var ray    = new Ray(p, raydir);
 
-                var occIsect : Isect = new Isect();
+                var occIsect = new Isect();
                 this.spheres[0].intersect(ray, occIsect);
                 this.spheres[1].intersect(ray, occIsect);
                 this.spheres[2].intersect(ray, occIsect);
@@ -264,39 +258,38 @@ class AOBench {
         }
         
         // [0.0, 1.0]
-        var occ_f : Float  = (AOBench.ALLRAY - occlusion) / AOBench.ALLRAY;
+        var occ_f = (AOBench.ALLRAY - occlusion) / AOBench.ALLRAY;
 
         return new Vec3(occ_f, occ_f, occ_f);
     }
 
 	
     public function render(ctx:CanvasRenderingContext2D, w:Int, h:Int)  {
-        var cnt:Int = 0;
-        var x:Int, y:Int;
-        var half_w:Float = w * .5;
-        var half_h:Float = h * .5;
+        var cnt = 0;
+        var half_w = w * .5;
+        var half_h = h * .5;
         for (y in 0...h) {
             for (x in 0...w) {
                 cnt++;
-                var px:Float =  (x - half_w)/half_w;
-                var py:Float = -(y - half_h)/half_h;
+                var px =  (x - half_w)/half_w;
+                var py = -(y - half_h)/half_h;
                 
-                var eye:Vec3 = Vec3.vnormalize(new Vec3(px, py, -1.0));
-                var ray:Ray = new Ray(new Vec3(0.0, 0.0, 0.0), eye);
+                var eye = Vec3.vnormalize(new Vec3(px, py, -1.0));
+                var ray = new Ray(new Vec3(0.0, 0.0, 0.0), eye);
                 
-                var isect:Isect = new Isect();
+                var isect = new Isect();
                 this.spheres[0].intersect(ray, isect);
                 this.spheres[1].intersect(ray, isect);
                 this.spheres[2].intersect(ray, isect);
                 this.plane.intersect(ray, isect);
                 
-                var col:Vec3 = new Vec3(0.0,0.0,0.0);
+                var col = new Vec3(0.0,0.0,0.0);
                 if (isect.hit)
                     col = this.ambient_occlusion(isect);
                 
-                var r:Int = Math.round(col.x * 255.0);
-                var g:Int = Math.round(col.y * 255.0);
-                var b:Int = Math.round(col.z * 255.0);
+                var r = Math.round(col.x * 255.0);
+                var g = Math.round(col.y * 255.0);
+                var b = Math.round(col.z * 255.0);
                 
                 // use fill rect
                 ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
@@ -317,7 +310,7 @@ class Application {
         var canvas : Dynamic = dom.getElementById(canvasId);
         var ctx : CanvasRenderingContext2D = canvas.getContext("2d");
 
-        var ao : AOBench = new AOBench();
+        var ao = new AOBench();
         var t0 = Date.now().getTime();
         ao.render(ctx,256,256);
         var t1 = Date.now().getTime();
