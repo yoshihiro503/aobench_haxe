@@ -1,7 +1,7 @@
 /*
-  AOBench (jsx version)
-  2012/5/31
-  ported by Twitter:@kioku_systemk
+  AOBench (haxe version)
+  2012/6/2
+  ported by Twitter:@yoshihiro503
 	
   aobench site: http://code.google.com/p/aobench/
 	
@@ -12,7 +12,7 @@ class Vec3 {
     public var x : Float;
     public var y : Float;
     public var z : Float;
-    //function new() {}
+
     public function new(x:Float, y:Float, z:Float)
         {
             this.x = x;
@@ -20,29 +20,29 @@ class Vec3 {
             this.z = z;
     }
     
-    public static function vadd(a:Vec3, b:Vec3) : Vec3
+    public static inline function vadd(a:Vec3, b:Vec3) : Vec3
     {
         return new Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
     }
 
-    public static function vsub(a:Vec3, b:Vec3):Vec3
+    public static inline function vsub(a:Vec3, b:Vec3):Vec3
     {
         return new Vec3(a.x - b.x, a.y - b.y, a.z - b.z);
     }
 
-    public static function vcross(a:Vec3, b:Vec3):Vec3
+    public static inline function vcross(a:Vec3, b:Vec3):Vec3
     {
         return new Vec3(a.y * b.z - a.z * b.y,
                         a.z * b.x - a.x * b.z,
                         a.x * b.y - a.y * b.x);
     }
 
-    public static function vdot(a:Vec3, b:Vec3):Float
+    public static inline function vdot(a:Vec3, b:Vec3):Float
     {
         return (a.x * b.x + a.y * b.y + a.z * b.z);
     }
 
-    public static function vlength(a:Vec3):Float
+    static inline function vlength(a:Vec3):Float
     {
         return Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
     }
@@ -91,8 +91,6 @@ class Sphere {
     public var center : Vec3;
     public var radius : Float;
 
-    //function new() {}
-    
     public function new(center:Vec3, radius:Float) {
         this.center = center;
         this.radius = radius;
@@ -126,7 +124,6 @@ class Sphere {
 class Plane {
     public var p : Vec3;
     public var n : Vec3;
-    //function new() {}
     
     public function new(p:Vec3, n:Vec3) {
         this.p = p;
@@ -163,10 +160,10 @@ class AOBench {
     static inline var IMAGE_HEIGHT = 256;
     static inline var NSUBSAMPLES  = 2;
     static inline var NAO_SAMPLES  = 8;
-    static inline var  EPS          = 0.0001;
-    static inline var  NPHI   = AOBench.NAO_SAMPLES;
-    static inline var  NTHETA = AOBench.NAO_SAMPLES;
-    static inline var  ALLRAY = AOBench.NAO_SAMPLES * AOBench.NAO_SAMPLES;
+    static inline var EPS          = 0.0001;
+    static inline var NPHI   = AOBench.NAO_SAMPLES;
+    static inline var NTHETA = AOBench.NAO_SAMPLES;
+    static inline var ALLRAY = AOBench.NAO_SAMPLES * AOBench.NAO_SAMPLES;
 	
     function clamp(f:Float) : Float
     {
