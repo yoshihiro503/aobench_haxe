@@ -97,8 +97,11 @@ class Sphere {
     }
     public function intersect(ray:Ray, isect:Isect) {
         // rs = ray.org - sphere.center
-        var rs : Vec3  = Vec3.vsub(ray.org, this.center);
-        var B  : Float = Vec3.vdot(rs, ray.dir);
+        var org = ray.org;
+        var dir = ray.dir;
+        var center = this.center;
+        var rs : Vec3  = Vec3.vsub(org, center);
+        var B  : Float = Vec3.vdot(rs, dir);
         var C  : Float = Vec3.vdot(rs, rs) - (this.radius * this.radius);
         var D  : Float = B * B - C;
 
@@ -109,12 +112,13 @@ class Sphere {
                 isect.t   = t;
                 isect.hit = true;
 
-                isect.p = new Vec3(ray.org.x + ray.dir.x * t,
-                                   ray.org.y + ray.dir.y * t,
-                                   ray.org.z + ray.dir.z * t);
+                var p = new Vec3(ray.org.x + ray.dir.x * t,
+                             ray.org.y + ray.dir.y * t,
+                             ray.org.z + ray.dir.z * t);
+                isect.p = p;
 
                 // calculate normal.
-                var n = Vec3.vsub(isect.p, this.center);
+                var n = Vec3.vsub(p, center);
                 isect.n = Vec3.vnormalize(n);
             }
         }
@@ -130,10 +134,14 @@ class Plane {
         this.n = n;
     }
     public function intersect (ray:Ray, isect:Isect) {
-        var d  = -Vec3.vdot(this.p, this.n);
-        var v =  Vec3.vdot(ray.dir, this.n);
+        var p = this.p;
+        var n = this.n;
+        var org = ray.org;
+        var dir = ray.dir;
+        var d  = -Vec3.vdot(p, n);
+        var v =  Vec3.vdot(dir, n);
         if (Math.abs(v) < 1.0e-17) return;      // no hit
-        var t = -(Vec3.vdot(ray.org, this.n) + d) / v;
+        var t = -(Vec3.vdot(org, n) + d) / v;
         if ( (t > 0.0) && (t < isect.t) ) {
             isect.hit = true;
             isect.t   = t;
@@ -188,10 +196,12 @@ class AOBench {
             basis[1].x = 1.0;
         }
 
-        basis[0] = Vec3.vcross(basis[1], basis[2]);
+        var b1 = basis[1], b2 = basis[2];
+        basis[0] = Vec3.vcross(b1, b2);
         basis[0] = Vec3.vnormalize(basis[0]);
 
-        basis[1] = Vec3.vcross(basis[2], basis[0]);
+        var b0 = basis[0];
+        basis[1] = Vec3.vcross(b2, b0);
         basis[1] = Vec3.vnormalize(basis[1]);
     }
 
