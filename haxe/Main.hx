@@ -274,7 +274,7 @@ class AOBench {
     }
 
 	
-    public function render(ctx:CanvasRenderingContext2D, w:Int, h:Int)  {
+    public function render(ctx:Dynamic, w:Int, h:Int)  {
         var cnt = 0;
         var half_w = w * .5;
         var half_h = h * .5;
@@ -318,7 +318,7 @@ class Application {
 
         var dom = Lib.document;
         var canvas : Dynamic = dom.getElementById(canvasId);
-        var ctx : CanvasRenderingContext2D = canvas.getContext("2d");
+        var ctx : Dynamic = canvas.getContext("2d");
 
         var ao = new AOBench();
         var t0 = Date.now().getTime();
